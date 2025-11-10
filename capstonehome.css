@@ -1,0 +1,137 @@
+Body {
+	background-color: #e9e9e9;
+	margin: 0;
+	font-family: Arial, sans-serif;
+}
+
+.Topbar {
+	display: flex;
+	align-items: center;
+	width: 103%;
+	height: 60px;
+	background-color: white;
+	box-shadow: 0px 0px 5px #c4c4c4;
+}
+
+.LogonTitle {
+	display: flex;
+	width: 50%;
+	margin-left: 2%;
+	white-space: nowrap;
+	overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.TopbarTitle {
+	font-family: Calibri;
+	color: #4a4a4a;
+}
+
+.Antipolo {
+	margin: 20px;
+	height: 45px;
+	width: 45px;
+}
+
+.sidebar {
+	height: 100%;
+	margin-top: 62px;
+	width: 60px;
+	position: fixed;
+	top: 0;
+	left: 0;
+	background-color: #ffffff;
+	padding-top: 20px;
+	overflow-x: hidden;
+	transition: width 0.3s ease;
+	white-space: nowrap;
+	box-shadow: 0px 0px 5px #c4c4c4;
+}
+
+.sidebar:hover {
+	width: 200px;
+}
+
+.sidebar:hover ~ .content {
+	margin-left: 200px;
+}
+
+.sidebar a {
+	display: flex;
+	align-items: center;
+	color: #4a4a4a;
+	padding: 12px 20px;
+	text-decoration: none;
+	transition: background 0.3s;
+	font-family: Calibri;
+}
+
+.sidebar a:hover {
+	background-color: #d2d2d2;
+}
+
+.sidebar a img {
+	width: 20px;
+	height: 20px;
+	object-fit: contain;
+}
+
+.sidebar a span {
+	opacity: 0;
+	margin-left: 10px;
+	transition: opacity 0.3s ease;
+}
+
+.sidebar:hover a span {
+	opacity: 1;
+}
+
+.Home_content {
+	margin: 50px;
+	padding: 20px;
+	transition: margin-left 0.3s ease;
+}
+
+.Home_container {
+	border-radius: 15px;
+	margin: 20px;
+	margin-left: 75px;
+	flex: 1;
+	display: flex;
+	Width: 94%;
+	height: 500px;
+	background-color: #FFFFFF;
+	box-shadow: 0px 0px 5px #c4c4c4;
+}
+
+.AnnouncementContainer {
+	border-radius: 15px;
+	margin: 20px;
+	margin-left: 75px;
+	flex: 1;
+	display: flex;
+	Width: 80%;
+	height: 90%;
+	background-color: #e9e9e9;
+}
+
+.Text_announcement {
+	margin: 30px;
+	font-family: Calibri;
+	color: #626262;
+}
+
+.Text_title {
+	margin-top: 0px;
+	margin-bottom: 50px;
+	margin-left: 20px;
+	font-size: 50px;
+	font-family: Calibri;
+	color: #4a4a4a;
+}
+
+.Text_title2 {
+	margin: 0px;
+	font-family: Calibri;
+	color: #626262;
+}

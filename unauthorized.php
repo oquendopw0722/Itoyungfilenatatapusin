@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+<html>
+<head><title>Access Denied</title></head>
+<body>
+    <h1>Access Denied</h1>
+    <p>You do not have permission to access this page. Please log in with the correct role or contact an administrator.</p>
+    <a href="index.html">Back to Login</a>
+</body>
+</html>

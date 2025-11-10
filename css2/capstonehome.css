@@ -1,0 +1,284 @@
+Body {
+	background-color: #e9e9e9;
+	margin: 0;
+	font-family: Arial, sans-serif;
+}
+
+.Topbar {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	height: 100px;
+	background-color: #ffffff;
+	padding-left: 50px;
+	position: sticky;
+	top: 0;
+  	z-index: 1000;
+}
+
+.Topbarline {
+	height: 20px;
+	width: 100%;
+	background-color: #343bc9;
+	box-shadow: 0px 0px 5px #c4c4c4;
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+}
+
+.TopbarLineText {
+	margin-left: 30%;
+	font-family: Calibri;
+	color: #ffffff;
+	font-size: 80%;
+}
+
+.LogonTitle {
+	display: flex;
+	width: 30%;
+	margin-left: 2%;
+}
+
+.TopbarTitle1 {
+	font-size: 150%;
+	font-family: Calibri;
+	color: #1c773c;
+}
+
+.TopbarTitle2 {
+	font-size: 150%;
+	font-family: Calibri;
+	color: #343bc9;
+}
+
+.Antipolo {
+	margin: 20px;
+	height: 45px;
+	width: 45px;
+}
+
+.sidebar {
+	height: 100%;
+	margin-top: 62px;
+	width: 60px;
+	position: fixed;
+	top: 0;
+	left: 0;
+	background-color: #ffffff;
+	padding-top: 20px;
+	overflow-x: hidden;
+	transition: width 0.3s ease;
+	white-space: nowrap;
+	box-shadow: 0px 0px 5px #c4c4c4;
+}
+
+.sidebar:hover {
+	width: 200px;
+}
+
+.sidebar:hover ~ .content {
+	margin-left: 200px;
+}
+
+.sidebar a {
+	display: flex;
+	align-content: center;
+	color: #4a4a4a;
+	padding: 12px 20px;
+	text-decoration: none;
+	transition: background 0.3s;
+	font-family: Calibri;
+}
+
+.sidebar a:hover {
+	background-color: #d2d2d2;
+}
+
+.sidebar a img {
+	width: 20px;
+	height: 20px;
+	object-fit: contain;
+}
+
+.sidebar a span {
+	opacity: 0;
+	margin-left: 10px;
+	transition: opacity 0.3s ease;
+}
+
+.sidebar:hover a span {
+	opacity: 1;
+}
+
+.Home_content {
+	margin: 50px;
+	padding: 20px;
+	transition: margin-left 0.3s ease;
+}
+
+.Home_container {
+	border-radius: 15px;
+	margin: 0 auto;
+	margin-top: 5%;
+	margin-bottom: 5%;
+	flex: 1;
+	display: flex;
+	Width: 60%;
+	height: 500px;
+	background-color: #FFFFFF;
+	box-shadow: 0px 0px 5px #c4c4c4;
+}
+
+.AnnouncementContainer {
+	border-radius: 15px;
+	margin: 20px;
+	margin-left: 75px;
+	flex: 1;
+	display: flex;
+	Width: 80%;
+	height: 90%;
+	background-color: #e9e9e9;
+}
+
+.Text_announcement {
+	margin: 30px;
+	font-family: Calibri;
+	color: #626262;
+}
+
+.Text_title {
+	margin-top: 0px;
+	margin-bottom: 50px;
+	margin-left: 20px;
+	font-size: 50px;
+	font-family: Calibri;
+	color: #4a4a4a;
+}
+
+.Text_title2 {
+	margin: 0px;
+	font-family: Calibri;
+	color: #626262;
+}
+
+.navbar ul {
+  list-style: none;
+  display: flex;
+  gap: 20px;
+}
+
+.navbar a {
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.navbar a:hover {
+  color: #f9a825;
+}
+
+.cta-btn {
+  background-color: #4caf50;
+  color: #fff;
+  padding: 10px 18px;
+  border-radius: 6px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+  margin-left: 20px;
+}
+
+.cta-btn:hover {
+  background-color: #43a047;
+}
+
+.hero {
+  position: relative;
+  width: 100%;
+  height: 450px;
+  overflow: hidden;
+}
+
+.hero img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(70%);
+}
+
+.hero-text-box {
+  position: absolute;
+  top: 50%;
+  left: 10%;
+  transform: translateY(-50%);
+  background-color: rgba(255, 255, 255, 0.85); /* semi-transparent white */
+  padding: 30px;
+  border-radius: 12px;
+  max-width: 480px;
+  color: #333;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.hero-text-box h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: #222;
+}
+
+.hero-text-box p {
+  font-size: 1rem;
+  margin-bottom: 20px;
+  color: #444;
+}
+
+.hero-btn {
+  background-color: #343bc9;
+  color: #fff;
+  padding: 12px 24px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.hero-btn:hover {
+  background-color: #171d8a;
+}
+
+@media (max-width: 768px) {
+  .hero {
+    height: 300px;
+  }
+
+  .hero-text-box {
+    left: 5%;
+    right: 5%;
+    padding: 20px;
+  }
+
+  .hero-text-box h1 {
+    font-size: 1.4rem;
+  }
+
+  .hero-text-box p {
+    font-size: 0.9rem;
+  }
+}
+
+.logout {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  transition: filter 0.3s ease;
+  cursor: pointer;
+}
+
+.logout:hover {
+  filter: brightness(70%);
+}

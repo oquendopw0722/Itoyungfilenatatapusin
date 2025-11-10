@@ -1,0 +1,140 @@
+/* Global Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Font and Background */
+body {
+    font-family: 'Poppins', sans-serif;
+    background: #f4f8f5;
+    color: #333;
+}
+
+/* Sidebar */
+.sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 230px;
+    height: 100%;
+    background-color: #2d6a4f;
+    color: white;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.sidebar h2 {
+    text-align: center;
+    margin-bottom: 25px;
+    font-weight: 600;
+    font-size: 20px;
+}
+
+.sidebar a {
+    display: block;
+    color: white;
+    text-decoration: none;
+    padding: 12px 10px;
+    border-radius: 6px;
+    transition: background 0.3s;
+    font-size: 15px;
+}
+
+.sidebar a:hover {
+    background: #40916c;
+}
+
+.logout {
+    background: #d62828;
+    margin-top: auto;
+    text-align: center;
+}
+
+/* Main Content */
+.main-content {
+    margin-left: 250px;
+    padding: 25px;
+}
+
+/* Header */
+header {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    margin-bottom: 25px;
+}
+
+header h1 {
+    color: #2d6a4f;
+    font-weight: 600;
+    font-size: 22px;
+}
+
+header p {
+    font-size: 14px;
+    color: #555;
+    margin-top: 5px;
+}
+
+/* Dashboard Cards */
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+.card {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+    text-align: center;
+}
+
+.card h3 {
+    color: #2d6a4f;
+    margin-bottom: 10px;
+    font-size: 16px;
+}
+
+.card p {
+    font-size: 26px;
+    font-weight: 600;
+    color: #40916c;
+}
+
+/* Announcements Section */
+.announcement {
+    background: white;
+    margin-top: 30px;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+}
+
+.announcement h2 {
+    color: #2d6a4f;
+    margin-bottom: 12px;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.announcement ul {
+    list-style-type: disc;
+    padding-left: 20px;
+    color: #333;
+    line-height: 1.8;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    margin-top: 30px;
+    color: #777;
+    font-size: 14px;
+}

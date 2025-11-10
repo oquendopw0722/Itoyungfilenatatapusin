@@ -1,0 +1,189 @@
+<?php
+session_start();
+if (!isset($_SESSION['username'])) {
+    header("Location: login.php");
+    exit();
+}
+
+// Database connection
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "myfirstdatabase";
+$conn = new mysqli($servername, $username, $password, $dbname);
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Fetch user role
+$user_query = "SELECT id, role FROM users WHERE username = ?";
+$stmt = $conn->prepare($user_query);
+$stmt->bind_param("s", $_SESSION['username']);
+$stmt->execute();
+$user_result = $stmt->get_result();
+$user = $user_result->fetch_assoc();
+if (!$user || !in_array($user['role'], ['teacher', 'admin'])) {
+    header("Location: unauthorized.php");
+    exit();
+}
+$teacher_id = $user['id'];
+
+// Fetch parents for dropdown
+$parents_query = "SELECT id, username FROM users WHERE role = 'parent'";
+$parents_result = $conn->query($parents_query);
+$parents = [];
+while ($row = $parents_result->fetch_assoc()) {
+    $parents[] = $row;
+}
+
+// Handle form submission
+$message = '';
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $child_name = trim($_POST['child_name']);
+    $parent_id = (int)$_POST['parent_id'];
+    $domain = trim($_POST['domain']);
+    $percentage = (int)$_POST['percentage'];
+    $checklist = trim($_POST['checklist']);
+    $report_text = trim($_POST['report_text']);
+
+    if (empty($child_name) || empty($domain) || $percentage < 0 || $percentage > 100) {
+        $message = 'Please fill all required fields correctly.';
+    } else {
+        // Insert child
+        $child_query = "INSERT INTO children (name, parent_id) VALUES (?, ?)";
+        $stmt = $conn->prepare($child_query);
+        $stmt->bind_param("si", $child_name, $parent_id);
+        $stmt->execute();
+        $child_id = $conn->insert_id;
+
+        // Insert initial progress
+        $progress_query = "INSERT INTO eccd_progress (child_id, domain, progress_percentage, checklist_items) VALUES (?, ?, ?, ?)";
+        $stmt = $conn->prepare($progress_query);
+        $stmt->bind_param("isss", $child_id, $domain, $percentage, $checklist);
+        $stmt->execute();
+
+        // Insert initial report
+        if (!empty($report_text)) {
+            $report_query = "INSERT INTO reports (child_id, teacher_id, report_text) VALUES (?, ?, ?)";
+            $stmt = $conn->prepare($report_query);
+            $stmt->bind_param("iis", $child_id, $teacher_id, $report_text);
+            $stmt->execute();
+        }
+
+        $message = 'Child enrolled successfully with initial data!';
+    }
+}
+
+$conn->close();
+?>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Enroll New Child - Teacher</title>
+    <link rel="stylesheet" href="css/style1.css">
+    <link rel="stylesheet" href="css2/dashboard.css">
+    <style>
+        .form-group { margin-bottom: 1rem; }
+
+        .Home_container {
+            margin-left: 240px;
+        }
+        .sidebar {
+            margin-top: 102px;
+            overflow-y: scroll;
+        }
+    </style>
+</head>
+<body>
+    <!-- Reuse your topbar and sidebar -->
+    <div class="Topbar">
+        <img class="Antipolo" src="pictures/ANTIPOLO.png">
+        <h1 class="TopbarTitle1">GOLD: &nbsp; </h1>
+        <h1 class="TopbarTitle2"> DXXXX daycare center</h1>
+        <nav class="navbar">
+            <ul>
+                <li><a href="home1.php">Home</a></li>
+                <li><a href="dashboard3.php">Dashboard</a></li>
+                <li><a href="extra.php">Old Website</a></li>
+            </ul>
+        </nav>
+        <a href="learning.html" class="cta-btn">Learn</a>
+    </div>
+    <div class="Topbarline">
+        <p class="TopbarLineText">Welcome, <?php echo $_SESSION['username']; ?></p>
+    </div>
+
+  <!-- Sidebar -->
+   <div class="sidebar">
+        <h2>Teacher Panel</h2>
+        <a href="teacherdashboard1.php">Dashboard</a>
+        <a href="announcements_feed2.php">View Announcements</a>
+        <a href="calendar2.php">Calendar</a>
+        <a href="upload_materials2.php">Upload Learning Materials</a>
+        <a href="view_materials2.php">View Learning Materials</a>
+        <a href="teacher_progress.php">Student Progress</a>
+        <a href="enroll_child.php">Enroll new KID</a>
+        <a href="my_account2.php">My Account</a>
+        <a href="#">Class Management</a>
+        <a href="#">Assignment and Quizzes</a>
+        <a href="#">Communication</a>
+        <a href="#">Reports</a> 
+        <a href="#"></a>
+        <a href="#"></a>
+        <a href="#"></a>
+        <a href="#"></a>
+        <a href="#"></a>
+    </div>
+
+    <div class="Home_container">
+        <div class="Home_content">
+            <h2>Enroll New Child and Add Initial Data</h2>
+            <?php if ($message): ?><p style="color: green;"><?php echo htmlspecialchars($message); ?></p><?php endif; ?>
+
+            <form method="POST">
+                <div class="form-group">
+                    <label>Child's Name:</label>
+                    <input type="text" name="child_name" required>
+                </div>
+                <div class="form-group">
+                    <label>Select Parent:</label>
+                    <select name="parent_id" required>
+                        <option value="">Choose Parent</option>
+                        <?php foreach ($parents as $parent): ?>
+                            <option value="<?php echo $parent['id']; ?>"><?php echo htmlspecialchars($parent['username']); ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Initial Domain (e.g., Gross Motor):</label>
+                    <input type="text" name="domain" required>
+                </div>
+                <div class="form-group">
+                    <label>Initial Progress Percentage (0-100):</label>
+                    <input type="number" name="percentage" min="0" max="100" required>
+                </div>
+                <div class="form-group">
+                    <label>Initial Checklist Items (e.g., Can walk steadily:1, Climbs stairs:0):</label>
+                    <textarea name="checklist" rows="4" placeholder="Enter items separated by commas"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Initial Report/Notes:</label>
+                    <textarea name="report_text" rows="4" placeholder="Add initial teacher notes..."></textarea>
+                </div>
+                <button type="submit">Enroll Child</button>
+            </form>
+        </div>
+    </div>
+
+    <img src="pictures/LOicon.png" alt="Logout" class="logout" onclick="confirmLogout()">
+    <script>
+        function confirmLogout() {
+            const confirmAction = confirm("Are you sure you want to log out?");
+            if (confirmAction) {
+                window.location.href = "logout.php";
+            }
+        }
+    </script>
+</body>
+</html>
