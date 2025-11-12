@@ -36,23 +36,24 @@ $conn->close();
 
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>View Learning Materials</title>
     <link rel="stylesheet" href="css/style1.css">
     <link rel="stylesheet" href="css2/dashboard.css">
     <style>
         .Home_container {
-          margin-left: 240px;
+            margin-left: 240px;
         }
-        
+
         .sidebar {
-		    margin-top: 102px;
+            margin-top: 102px;
             margin-bottom: 100px;
             overflow-y: scroll
-	    }
-
+        }
     </style>
 </head>
+
 <body>
     <!-- Reuse your topbar and sidebar -->
     <div class="Topbar">
@@ -72,26 +73,7 @@ $conn->close();
         <p class="TopbarLineText">Welcome, <?php echo $_SESSION['username']; ?></p>
     </div>
 
-    <div class="sidebar">
-        <h2>Teacher Panel</h2>
-        <a href="teacherdashboard1.php">Dashboard</a>
-        <a href="announcements_feed2.php">View Announcements</a>
-        <a href="calendar2.php">Calendar</a>
-        <a href="upload_materials2.php">Upload Learning Materials</a>
-        <a href="view_materials2.php">View Learning Materials</a>
-        <a href="teacher_progress.php">Student Progress</a>
-        <a href="enroll_child.php">Enroll new KID</a>
-        <a href="my_account2.php">My Account</a>
-        <a href="#">Class Management</a>
-        <a href="#">Assignment and Quizzes</a>
-        <a href="#">Communication</a>
-        <a href="#">Reports</a> 
-        <a href="#"></a>
-        <a href="#"></a>
-        <a href="#"></a>
-        <a href="#"></a>
-        <a href="#"></a>
-    </div>
+    <?php include('includes/teacher_sidebar.php'); ?>
 
     <div class="Home_container">
         <div class="Home_content">
@@ -123,4 +105,5 @@ $conn->close();
         }
     </script>
 </body>
+
 </html>

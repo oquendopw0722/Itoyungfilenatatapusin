@@ -1,0 +1,122 @@
+/* student_progress.css */
+
+.Home_container {
+    margin-left: 240px;
+    background-color: #fff;
+    border-radius: 15px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    width: 80%;
+    margin-top: 3%;
+}
+
+.Home_content h2 {
+    color: #343bc9;
+    font-family: 'Calibri', sans-serif;
+    font-size: 26px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.child-select {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 30px;
+}
+
+.child-select label {
+    font-weight: 600;
+    color: #333;
+}
+
+.child-select select {
+    padding: 10px 14px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    font-size: 15px;
+    transition: border-color 0.3s ease;
+}
+
+.child-select select:focus {
+    border-color: #343bc9;
+    outline: none;
+    background-color: #fff;
+}
+
+/* Progress Cards */
+.progress-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+.domain-card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 300px;
+    transition: transform 0.2s ease;
+}
+
+.domain-card:hover {
+    transform: translateY(-5px);
+}
+
+.domain-card h3 {
+    color: #343bc9;
+    margin-bottom: 10px;
+    font-size: 18px;
+}
+
+.progress-bar {
+    background-color: #e0e0e0;
+    border-radius: 10px;
+    overflow: hidden;
+    height: 22px;
+    margin-bottom: 10px;
+}
+
+.progress {
+    background-color: #4CAF50;
+    height: 100%;
+    color: #fff;
+    font-weight: 600;
+    text-align: center;
+    line-height: 22px;
+    transition: width 0.4s ease-in-out;
+}
+
+.checklist {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    color: #444;
+}
+
+.checklist li {
+    padding: 5px 0;
+    font-size: 14px;
+}
+
+.placeholder-text {
+    text-align: center;
+    color: #777;
+    font-size: 16px;
+    margin-top: 40px;
+}
+
+@media (max-width: 768px) {
+    .Home_container {
+        margin-left: 0;
+        width: 95%;
+    }
+
+    .domain-card {
+        width: 100%;
+    }
+}

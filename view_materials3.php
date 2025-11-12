@@ -36,23 +36,24 @@ $conn->close();
 
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>View Learning Materials</title>
     <link rel="stylesheet" href="css/style1.css">
     <link rel="stylesheet" href="css2/dashboard.css">
     <style>
         .Home_container {
-          margin-left: 240px;
+            margin-left: 240px;
         }
-        
+
         .sidebar {
-		    margin-top: 102px;
+            margin-top: 102px;
             margin-bottom: 100px;
             overflow-y: scroll
-	    }
-
+        }
     </style>
 </head>
+
 <body>
     <!-- Reuse your topbar and sidebar -->
     <div class="Topbar">
@@ -72,23 +73,7 @@ $conn->close();
         <p class="TopbarLineText">Welcome, <?php echo $_SESSION['username']; ?></p>
     </div>
 
-    <div class="sidebar">
-        <h2>Parent Panel</h2>
-        <a href="parentdashboard1.php">Dashboard</a>
-        <a href="announcements_feed3.php">View Announcements</a>
-        <a href="calendar3.php">Calendar</a>
-        <a href="student_progress.php">Student Progress</a>
-        <a href="view_materials3.php">View Learning Materials</a>
-        <a href="my_account3.php">My Account</a>
-        <a href="#"></a>
-        <a href="#"></a>
-        <a href="#"></a>
-        <a href="#"></a>
-        <a href="#"></a>
-        <a href="#"></a>
-        <a href="#"></a>
-        <a href="#"></a>
-    </div>
+    <?php include('includes/parent_sidebar.php'); ?>
 
     <div class="Home_container">
         <div class="Home_content">
@@ -120,4 +105,5 @@ $conn->close();
         }
     </script>
 </body>
+
 </html>

@@ -79,22 +79,28 @@ $conn->close();
 
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Enroll New Child - Teacher</title>
     <link rel="stylesheet" href="css/style1.css">
     <link rel="stylesheet" href="css2/dashboard.css">
+    <link rel="stylesheet" href="css2/enroll_form.css">
     <style>
-        .form-group { margin-bottom: 1rem; }
+        .form-group {
+            margin-bottom: 1rem;
+        }
 
         .Home_container {
             margin-left: 240px;
         }
+
         .sidebar {
             margin-top: 102px;
             overflow-y: scroll;
         }
     </style>
 </head>
+
 <body>
     <!-- Reuse your topbar and sidebar -->
     <div class="Topbar">
@@ -114,27 +120,8 @@ $conn->close();
         <p class="TopbarLineText">Welcome, <?php echo $_SESSION['username']; ?></p>
     </div>
 
-  <!-- Sidebar -->
-   <div class="sidebar">
-        <h2>Teacher Panel</h2>
-        <a href="teacherdashboard1.php">Dashboard</a>
-        <a href="announcements_feed2.php">View Announcements</a>
-        <a href="calendar2.php">Calendar</a>
-        <a href="upload_materials2.php">Upload Learning Materials</a>
-        <a href="view_materials2.php">View Learning Materials</a>
-        <a href="teacher_progress.php">Student Progress</a>
-        <a href="enroll_child.php">Enroll new KID</a>
-        <a href="my_account2.php">My Account</a>
-        <a href="#">Class Management</a>
-        <a href="#">Assignment and Quizzes</a>
-        <a href="#">Communication</a>
-        <a href="#">Reports</a> 
-        <a href="#"></a>
-        <a href="#"></a>
-        <a href="#"></a>
-        <a href="#"></a>
-        <a href="#"></a>
-    </div>
+    <!-- Sidebar -->
+    <?php include('includes/teacher_sidebar.php'); ?>
 
     <div class="Home_container">
         <div class="Home_content">
@@ -152,6 +139,15 @@ $conn->close();
                         <option value="">Choose Parent</option>
                         <?php foreach ($parents as $parent): ?>
                             <option value="<?php echo $parent['id']; ?>"><?php echo htmlspecialchars($parent['username']); ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Select Teacher:</label>
+                    <select name="teacher_id" required>
+                        <option value="">Choose Teacher</option>
+                        <?php foreach ($teachers as $teacher): ?>
+                            <option value="<?php echo $teacher['id']; ?>"><?php echo htmlspecialchars($teacher['username']); ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>
@@ -186,4 +182,5 @@ $conn->close();
         }
     </script>
 </body>
+
 </html>

@@ -1,0 +1,99 @@
+/* --- FORM DESIGN IMPROVEMENTS --- */
+
+form {
+    background-color: #ffffff;
+    padding: 30px 40px;
+    margin: 40px auto;
+    font-family: 'Calibri', sans-serif;
+    transition: all 0.3s ease;
+}
+
+
+h2 {
+    text-align: center;
+    color: #343bc9;
+    font-family: 'Calibri', sans-serif;
+    font-size: 28px;
+    margin-bottom: 25px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+label {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 8px;
+    font-size: 15px;
+}
+
+input[type="text"],
+input[type="number"],
+select,
+textarea {
+    padding: 12px 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 15px;
+    transition: all 0.2s ease-in-out;
+    background-color: #fafafa;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+select:focus,
+textarea:focus {
+    border-color: #343bc9;
+    outline: none;
+    box-shadow: 0 0 6px rgba(52, 59, 201, 0.2);
+    background-color: #fff;
+}
+
+textarea {
+    resize: vertical;
+}
+
+button[type="submit"] {
+    background-color: #343bc9;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 20px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    width: 100%;
+    margin-top: 10px;
+}
+
+button[type="submit"]:hover {
+    background-color: #1e259b;
+    transform: translateY(-2px);
+}
+
+button[type="submit"]:active {
+    transform: translateY(0);
+}
+
+p[style*="color: green"] {
+    text-align: center;
+    background-color: #e8f5e9;
+    color: #2e7d32 !important;
+    border-radius: 8px;
+    padding: 10px 15px;
+    font-weight: 600;
+    margin: 15px auto;
+    width: fit-content;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    form {
+        width: 95%;
+        padding: 20px;
+    }
+}

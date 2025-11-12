@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && in_array($user_role, ['teacher', 'a
         $event_date = $_POST['event_date'];
         $title = trim($_POST['title']);
         $description = trim($_POST['description']);
-        
+
         $date_obj = DateTime::createFromFormat('Y-m-d', $event_date);
         $current_date = new DateTime();
         if (!$date_obj || $date_obj->format('Y-m-d') !== $event_date || $date_obj->format('Y') < 2024 || $date_obj->format('Y') > 2040 || $date_obj < $current_date) {
@@ -57,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && in_array($user_role, ['teacher', 'a
         $event_date = $_POST['event_date'];
         $title = trim($_POST['title']);
         $description = trim($_POST['description']);
-        
+
         $date_obj = DateTime::createFromFormat('Y-m-d', $event_date);
         $current_date = new DateTime();
         if (!$date_obj || $date_obj->format('Y-m-d') !== $event_date || $date_obj->format('Y') < 2024 || $date_obj->format('Y') > 2040) {
@@ -123,37 +123,70 @@ if ($next_month > 12) {
 
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Calendar</title>
     <link rel="stylesheet" href="css/style1.css">
     <link rel="stylesheet" href="css2/dashboard.css">
     <style>
-        .calendar { width: 100%; border-collapse: collapse; }
-        .calendar th, .calendar td { padding: 10px; border: 1px solid #ddd; text-align: center; }
-        .calendar th { background-color: #f2f2f2; }
-        .event { background-color: #e0f7fa; }
-        .navigation { margin-bottom: 1rem; }
-        .event-form { margin-top: 1rem; }
-        .sidebar { margin-top: 102px; margin-bottom: 100px; overflow-y: scroll; }
-        .Home_container { margin-left: 240px; }
-        .event-actions { margin-left: 1rem; }
+        .calendar {
+            width: 100%;
+            border-collapse: collapse;
+        }
 
-        .Home_container {
-          margin-left: 240px;
-          height: 1500px;
+        .calendar th,
+        .calendar td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+
+        .calendar th {
+            background-color: #f2f2f2;
+        }
+
+        .event {
+            background-color: #e0f7fa;
+        }
+
+        .navigation {
+            margin-bottom: 1rem;
+        }
+
+        .event-form {
+            margin-top: 1rem;
         }
 
         .sidebar {
-		    margin-top: 102px;
-        margin-bottom: 100px;
-        overflow-y: scroll
-        
-	      }
+            margin-top: 102px;
+            margin-bottom: 100px;
+            overflow-y: scroll;
+        }
+
+        .Home_container {
+            margin-left: 240px;
+        }
+
+        .event-actions {
+            margin-left: 1rem;
+        }
+
+        .Home_container {
+            margin-left: 240px;
+            height: 1500px;
+        }
+
+        .sidebar {
+            margin-top: 102px;
+            margin-bottom: 100px;
+            overflow-y: scroll
+        }
     </style>
     <script>
         function confirmDelete() {
             return confirm("Are you sure you want to delete this event?");
         }
+
         function confirmLogout() {
             const confirmAction = confirm("Are you sure you want to log out?");
             if (confirmAction) {
@@ -162,6 +195,7 @@ if ($next_month > 12) {
         }
     </script>
 </head>
+
 <body>
     <!-- Topbar and Sidebar (unchanged) -->
     <div class="Topbar">
@@ -181,26 +215,7 @@ if ($next_month > 12) {
         <p class="TopbarLineText">Welcome, <?php echo $_SESSION['username']; ?></p>
     </div>
 
-    <div class="sidebar">
-        <h2>Teacher Panel</h2>
-        <a href="teacherdashboard1.php">Dashboard</a>
-        <a href="announcements_feed2.php">View Announcements</a>
-        <a href="calendar2.php">Calendar</a>
-        <a href="upload_materials2.php">Upload Learning Materials</a>
-        <a href="view_materials2.php">View Learning Materials</a>
-        <a href="teacher_progress.php">Student Progress</a>
-        <a href="enroll_child.php">Enroll new KID</a>
-        <a href="my_account2.php">My Account</a>
-        <a href="#">Class Management</a>
-        <a href="#">Assignment and Quizzes</a>
-        <a href="#">Communication</a>
-        <a href="#">Reports</a> 
-        <a href="#"></a>
-        <a href="#"></a>
-        <a href="#"></a>
-        <a href="#"></a>
-        <a href="#"></a>
-    </div>
+    <?php include('includes/teacher_sidebar.php'); ?>
 
     <div class="Home_container">
         <div class="Home_content">
@@ -214,7 +229,13 @@ if ($next_month > 12) {
             <table class="calendar">
                 <thead>
                     <tr>
-                        <th>Sun</th><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th>
+                        <th>Sun</th>
+                        <th>Mon</th>
+                        <th>Tue</th>
+                        <th>Wed</th>
+                        <th>Thu</th>
+                        <th>Fri</th>
+                        <th>Sat</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -303,4 +324,5 @@ if ($next_month > 12) {
 
     <img src="pictures/LOicon.png" alt="Logout" class="logout" onclick="confirmLogout()">
 </body>
+
 </html>

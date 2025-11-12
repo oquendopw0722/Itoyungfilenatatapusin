@@ -36,64 +36,55 @@ $conn->close();
 
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Announcements Feed</title>
     <link rel="stylesheet" href="css/style1.css">
     <link rel="stylesheet" href="css2/dashboard.css">
     <style>
-        .announcement { border: 1px solid #ddd; padding: 1rem; margin-bottom: 1rem; }
+        .announcement {
+            border: 1px solid #ddd;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
 
         .Home_container {
-        margin-left: 240px;
+            margin-left: 240px;
         }
 
         .sidebar {
-        margin-top: 102px;
-        margin-bottom: 100px;
-        overflow-y: scroll
+            margin-top: 102px;
+            margin-bottom: 100px;
+            overflow-y: scroll
         }
     </style>
 </head>
+
 <body>
     <!-- Reuse your topbar and sidebar -->
     <div class="Topbar">
-      <img class="Antipolo" src="pictures/ANTIPOLO.png">
-      <h1 class="TopbarTitle1">GOLD: &nbsp; </h1>
-      <h1 class="TopbarTitle2"> DXXXX daycare center</h1>
-      <nav class="navbar">
-      <ul>
-          <li><a href="home1.php">Home</a></li>
-          <li><a href="dashboard3.php">Dashboard</a></li>
-          <li><a href="extra.php">Old Website</a></li>
-      </ul>
-      </nav>
-      <a href="learning.html" class="cta-btn">Learn</a>
-		</div>
-		<div class="Topbarline">
-			<p class = "TopbarLineText">Welcome, <?php echo $_SESSION['username']; ?></p>
-		</div>
+        <div class="TopbarLeft">
+            <img class="Antipolo" src="pictures/ANTIPOLO.png">
+            <h1 class="TopbarTitle1">GOLD: &nbsp; </h1>
+            <h1 class="TopbarTitle2">DXXXX daycare center</h1>
+        </div>
+        <div class="TopbarRight">
+            <nav class="navbar">
+                <ul>
+                    <li><a href="home1.php">Home</a></li>
+                    <li><a href="dashboard3.php">Dashboard</a></li>
+                    <li><a href="extra.php">Old Website</a></li>
+                </ul>
+            </nav>
+            <a href="learning.html" class="cta-btn">Learn</a>
+        </div>
+    </div>
+    <div class="Topbarline">
+        <p class="TopbarLineText">Welcome, <?php echo $_SESSION['username']; ?></p>
+    </div>
 
     <!-- Sidebar -->
-    <div class="sidebar">
-        <h2>Teacher Panel</h2>
-        <a href="teacherdashboard1.php">Dashboard</a>
-        <a href="announcements_feed2.php">View Announcements</a>
-        <a href="calendar2.php">Calendar</a>
-        <a href="upload_materials2.php">Upload Learning Materials</a>
-        <a href="view_materials2.php">View Learning Materials</a>
-        <a href="teacher_progress.php">Student Progress</a>
-        <a href="enroll_child.php">Enroll new KID</a>
-        <a href="my_account2.php">My Account</a>
-        <a href="#">Class Management</a>
-        <a href="#">Assignment and Quizzes</a>
-        <a href="#">Communication</a>
-        <a href="#">Reports</a> 
-        <a href="#"></a>
-        <a href="#"></a>
-        <a href="#"></a>
-        <a href="#"></a>
-        <a href="#"></a>
-    </div>
+    <?php include('includes/teacher_sidebar.php'); ?>
 
 
     <div class="Home_container">
@@ -123,4 +114,5 @@ $conn->close();
         }
     </script>
 </body>
+
 </html>
