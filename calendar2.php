@@ -129,57 +129,250 @@ if ($next_month > 12) {
     <link rel="stylesheet" href="css/style1.css">
     <link rel="stylesheet" href="css2/dashboard.css">
     <style>
+        /* ---------------------------------------------------- */
+        /* 1. Sidebar and Layout Fixes (Based on previous conversation) */
+        /* ---------------------------------------------------- */
+        body {
+            background-color: #f4f6f9;
+            /* Light background for main content area */
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* Fix the sidebar position to start below the Topbar (100px + 20px = 120px) */
+        .sidebar {
+            position: fixed;
+            /* Ensure it stays in place */
+            top: 120px !important;
+            height: calc(100vh - 120px) !important;
+            overflow-y: auto !important;
+            overflow-x: hidden !important;
+            /* The width is assumed to be 230px from your style1.css */
+        }
+
+        /* Fix the main content area to start below the Topbar and next to the sidebar */
+        .Home_container {
+            /* Adjust margin-left to match sidebar width (230px) + some padding */
+            margin-left: 250px;
+            padding: 2rem;
+            /* Push content down to start below the sticky Topbar (120px + extra padding) */
+            min-height: 100vh;
+            /* Ensure container spans full viewport height */
+        }
+
+        .Home_content {
+            padding: 0;
+            margin: 0;
+        }
+
+
+        /* ---------------------------------------------------- */
+        /* 2. Calendar Component Styling */
+        /* ---------------------------------------------------- */
+
+        h2 {
+            margin-bottom: 20px;
+            font-size: 2rem;
+        }
+
+        h3 {
+            color: #4CAF50;
+            /* Green highlight color */
+            margin-top: 30px;
+            margin-bottom: 10px;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 5px;
+        }
+
+        .navigation {
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+
+        .navigation a {
+            color: #343bc9;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.2s;
+        }
+
+        .navigation a:hover {
+            color: #171d8a;
+        }
+
+        /* Calendar Table */
         .calendar {
             width: 100%;
             border-collapse: collapse;
+            table-layout: fixed;
+            /* Ensures uniform column width */
+            background-color: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            border-radius: 8px;
+            overflow: hidden;
+            /* Helps with border-radius on table */
         }
 
         .calendar th,
         .calendar td {
-            padding: 10px;
-            border: 1px solid #ddd;
-            text-align: center;
+            padding: 15px 5px;
+            height: 100px;
+            /* Set a minimum height for each day cell */
+            vertical-align: top;
+            text-align: right;
+            border: 1px solid #f0f0f0;
+            font-size: 1.2rem;
+            position: relative;
         }
 
         .calendar th {
-            background-color: #f2f2f2;
+            background-color: #f0f0f0;
+            color: #444;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            padding: 10px 5px;
+            text-align: center;
         }
 
-        .event {
-            background-color: #e0f7fa;
+        /* Day Number Positioning */
+        .calendar td {
+            font-weight: bold;
+            color: #333;
         }
 
-        .navigation {
-            margin-bottom: 1rem;
+        /* Event Indicator */
+        .calendar td small {
+            display: block;
+            font-size: 0.75rem;
+            color: #2d6a4f;
+            /* Green */
+            font-weight: normal;
+            margin-top: 5px;
+            text-align: left;
+            padding-left: 5px;
         }
 
+        .calendar .event {
+            background-color: #e6f7e9;
+            /* Very light green background for event days */
+            cursor: pointer;
+        }
+
+        .calendar .event:hover {
+            background-color: #d8f5dc;
+        }
+
+        /* ---------------------------------------------------- */
+        /* 3. Event Form Styling (Add/Edit) */
+        /* ---------------------------------------------------- */
         .event-form {
-            margin-top: 1rem;
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            margin-bottom: 40px;
         }
 
-        .sidebar {
-            margin-top: 102px;
-            margin-bottom: 100px;
-            overflow-y: scroll;
+        .event-form form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
 
-        .Home_container {
-            margin-left: 240px;
+        .event-form label {
+            font-weight: 600;
+            color: #555;
+            margin-top: 5px;
         }
 
-        .event-actions {
-            margin-left: 1rem;
+        .event-form input[type="date"],
+        .event-form input[type="text"],
+        .event-form textarea {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
         }
 
-        .Home_container {
-            margin-left: 240px;
-            height: 1500px;
+        .event-form button[type="submit"] {
+            background-color: #343bc9;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.2s;
+            margin-top: 15px;
         }
 
-        .sidebar {
-            margin-top: 102px;
-            margin-bottom: 100px;
-            overflow-y: scroll
+        .event-form button[type="submit"]:hover {
+            background-color: #171d8a;
+        }
+
+        .event-form a {
+            /* Cancel link */
+            display: block;
+            text-align: center;
+            margin-top: 10px;
+            color: #777;
+            text-decoration: none;
+        }
+
+
+        /* ---------------------------------------------------- */
+        /* 4. Event Details List Styling */
+        /* ---------------------------------------------------- */
+
+        .event-details-list {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .event-details-list h4 {
+            color: #333;
+            font-size: 1.1rem;
+            margin-top: 20px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .event-details-list ul {
+            list-style: none;
+            padding: 0;
+            margin: 10px 0 20px 0;
+        }
+
+        .event-details-list li {
+            padding: 10px 0;
+            border-bottom: 1px dashed #eee;
+        }
+
+        .event-details-list li:last-child {
+            border-bottom: none;
+        }
+
+        .event-details-list strong {
+            color: #343bc9;
+            display: block;
+            margin-bottom: 3px;
+        }
+
+        .event-actions button {
+            background-color: #f0f0f0;
+            color: #333;
+            border: 1px solid #ccc;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            font-size: 0.9rem;
+            margin-right: 5px;
+        }
+
+        .event-actions button:hover {
+            background-color: #ddd;
         }
     </style>
     <script>

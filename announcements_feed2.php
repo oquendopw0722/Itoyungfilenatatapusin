@@ -5,27 +5,34 @@ if (!isset($_SESSION['username'])) {
     exit();
 }
 
-// Database connection
 $conn = new mysqli("localhost", "root", "", "myfirstdatabase");
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Role check (allow parent, teacher, admin)
 $query = "SELECT role FROM users WHERE username = ?";
 $stmt = $conn->prepare($query);
 $stmt->bind_param("s", $_SESSION['username']);
 $stmt->execute();
 $result = $stmt->get_result();
 $user = $result->fetch_assoc();
-$allowed_roles = ['parent', 'teacher', 'admin'];  // Updated: Include admin
+$allowed_roles = ['parent', 'teacher', 'admin'];
 if (!$user || !in_array($user['role'], $allowed_roles)) {
     header("Location: unauthorized.php");
     exit();
 }
 
-// Fetch announcements
-$query = "SELECT a.title, a.content, a.posted_at, u.username AS posted_by FROM announcements a JOIN users u ON a.posted_by = u.id ORDER BY a.posted_at DESC";
+$cutoff_date = date('Y-m-d H:i:s', strtotime('-7 days'));
+
+$delete_query = "DELETE FROM announcements WHERE posted_at < ?";
+$stmt_del = $conn->prepare($delete_query);
+$stmt_del->bind_param("s", $cutoff_date);
+$stmt_del->execute();
+
+$query = "SELECT a.title, a.content, a.posted_at, u.username AS posted_by 
+          FROM announcements a 
+          JOIN users u ON a.posted_by = u.id 
+          ORDER BY a.posted_at DESC";
 $result = $conn->query($query);
 $announcements = [];
 while ($row = $result->fetch_assoc()) {
