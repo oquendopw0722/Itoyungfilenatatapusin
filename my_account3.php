@@ -60,14 +60,118 @@ $conn->close();
     <link rel="stylesheet" href="css2/dashboard.css">
 
     <style>
-        .Home_container {
-            margin-left: 240px;
+        /* ---------------------------------------------------- */
+        /* 1. Base Layout & Sidebar Fixes */
+        /* ---------------------------------------------------- */
+        body {
+            background-color: #f4f6f9;
+            font-family: 'Poppins', sans-serif;
         }
 
+        /* Apply the standard fixed sidebar position */
         .sidebar {
-            margin-top: 102px;
-            margin-bottom: 100px;
-            overflow-y: scroll
+            position: fixed;
+            top: 120px !important;
+            height: calc(100vh - 120px) !important;
+            overflow-y: auto !important;
+            overflow-x: hidden !important;
+        }
+
+        /* Adjust main content to start below Topbar and next to sidebar */
+        .Home_container {
+            margin-left: 250px;
+            /* Assuming sidebar width is 230px */
+            padding: 2rem;
+            /* Push content down below sticky Topbar */
+            min-height: 100vh;
+        }
+
+        /* ---------------------------------------------------- */
+        /* 2. Form Styling */
+        /* ---------------------------------------------------- */
+
+        h2 {
+            margin-top: 0;
+            margin-bottom: 25px;
+            font-size: 2rem;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        label {
+            font-weight: 600;
+            color: #555;
+            margin-top: 5px;
+            display: block;
+            /* Ensure label takes full width */
+        }
+
+        input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        input[type="password"]:focus {
+            border-color: #4CAF50;
+            /* Green focus color */
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+        }
+
+        /* Submit Button */
+        button[type="submit"] {
+            background-color: #4CAF50;
+            /* Green submit button */
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 6px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.1s;
+            margin-top: 20px;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #45a049;
+            transform: translateY(-1px);
+        }
+
+        /* ---------------------------------------------------- */
+        /* 3. Message Display (Success/Error) */
+        /* ---------------------------------------------------- */
+        .success-message {
+            background-color: #e6ffed;
+            color: #2d6a4f;
+            border: 1px solid #b7e4c7;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .error-message {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-weight: 500;
+            text-align: center;
         }
     </style>
 </head>
@@ -97,7 +201,12 @@ $conn->close();
     <div class="Home_container">
         <div class="Home_content">
             <h2>Change Password</h2>
-            <?php if ($message): ?><p style="color: <?php echo strpos($message, 'success') !== false ? 'green' : 'red'; ?>;"><?php echo htmlspecialchars($message); ?></p><?php endif; ?>
+            <?php if ($message): ?>
+                <?php
+                $message_class = strpos($message, 'success') !== false ? 'success-message' : 'error-message';
+                ?>
+                <p class="<?php echo $message_class; ?>"><?php echo htmlspecialchars($message); ?></p>
+            <?php endif; ?>
             <form method="POST">
                 <label>Current Password:</label>
                 <input type="password" name="current_pwd" required><br>

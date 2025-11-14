@@ -1,48 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up Page</title>
-    
-    <link rel="stylesheet" href="../css/cssmain1.css"> 
+
+    <link rel="stylesheet" href="../css/cssmain1.css">
     <!--<link rel="stylesheet" href="../css/cssreset1.css">-->
     <!--<link rel="stylesheet" href="../capstonedashboard.css">-->
     <link rel="stylesheet" href="../css2/dashboard.css">
     <link rel="stylesheet" href="../css/style1.css">
 
     <style>
+        .Home_container {
+            margin-left: 250px;
+            padding: 2rem;
+            background-color: #f4f6f9;
+        }
 
-      .Home_container {
-        margin-left: 240px;
-      }
-
-      .sidebar {
-      margin-top: 102px;
-      margin-bottom: 100px;
-      overflow-y: scroll
-      }
-
+        .sidebar {
+            position: fixed;
+            top: 120px !important;
+            height: calc(100vh - 120px) !important;
+            overflow-y: auto !important;
+            overflow-x: hidden !important;
+        }
     </style>
-      
+
 </head>
+
 <body>
 
     <div class="Topbar">
-				<img class="Antipolo" src="../pictures/ANTIPOLO.png">
-				<h1 class="TopbarTitle1">GOLD: &nbsp; </h1>
-				<h1 class="TopbarTitle2"> DXXXX daycare center</h1>
-				<nav class="navbar">
-				<ul>
-					<li><a href="../home1.php">Home</a></li>
-					<li><a href="../dashboard3.php">Dashboard</a></li>
-					<li><a href="../extra.php">Old Website</a></li>
-				</ul>
-      			</nav>
-				<a href="../learning.html" class="cta-btn">Learn</a>
-		</div>
-        <!--
+        <img class="Antipolo" src="../pictures/ANTIPOLO.png">
+        <h1 class="TopbarTitle1">GOLD: &nbsp; </h1>
+        <h1 class="TopbarTitle2"> DXXXX daycare center</h1>
+        <nav class="navbar">
+            <ul>
+                <li><a href="../home1.php">Home</a></li>
+                <li><a href="../dashboard3.php">Dashboard</a></li>
+                <li><a href="../extra.php">Old Website</a></li>
+            </ul>
+        </nav>
+        <a href="../learning.html" class="cta-btn">Learn</a>
+    </div>
+    <!--
 		<div class="Topbarline">
 			<p class = "TopbarLineText">Welcome, <?php echo $_SESSION['username']; ?></p>
 		</div>
@@ -120,4 +124,5 @@
         }
     </script>
 </body>
+
 </html>

@@ -127,10 +127,6 @@ $conn->close();
                 <p><?= $assignmentDue ?>%</p>
             </div>
             <div class="card">
-                <h3>Messages</h3>
-                <p><?= $messages ?></p>
-            </div>
-            <div class="card">
                 <h3>Current Attendance Rate</h3>
                 <p><?= $attendancerate ?></p>
             </div>

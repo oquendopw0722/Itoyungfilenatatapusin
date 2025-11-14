@@ -9,7 +9,7 @@
     <a href="enroll_child.php">Enrollment</a>
     <a href="my_account2.php">My Account</a>
     <a href="class_management.php">Class Management</a>
-    <a href="#">Assignment and Quizzes</a>
-    <a href="#">Communication</a>
-    <a href="#">Reports</a>
+    <!-- <a href="#">Assignment and Quizzes</a> -->
+    <!-- <a href="#">Communication</a> -->
+    <!-- <a href="#">Reports</a> -->
 </div>

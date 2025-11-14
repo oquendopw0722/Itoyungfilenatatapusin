@@ -58,7 +58,6 @@ $conn->close();
         /* Styles for the main content container */
         .Home_container {
             margin-left: 250px;
-            /* Use 250px for consistency with class_management */
             padding: 2rem;
             background-color: #f4f6f9;
         }
@@ -66,7 +65,7 @@ $conn->close();
         .sidebar {
             top: 120px !important;
             height: calc(100vh - 120px) !important;
-            overflow-y: auto !important;
+            overflow-y: auto !important;    
             overflow-x: hidden !important;
         }
 
