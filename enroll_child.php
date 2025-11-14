@@ -29,11 +29,19 @@ if (!$user || !in_array($user['role'], ['teacher', 'admin'])) {
 $teacher_id = $user['id'];
 
 // Fetch parents for dropdown
-$parents_query = "SELECT id, username FROM users WHERE role = 'parent'";
+$parents_query = "SELECT id, first_name, last_name FROM users WHERE role = 'parent'";
 $parents_result = $conn->query($parents_query);
 $parents = [];
 while ($row = $parents_result->fetch_assoc()) {
     $parents[] = $row;
+}
+
+// Fetch teachers for dropdown
+$teachers_query = "SELECT id, username FROM users WHERE role = 'teacher'";
+$teachers_result = $conn->query($teachers_query);
+$teachers = [];
+while ($row = $teachers_result->fetch_assoc()) {
+    $teachers[] = $row;
 }
 
 // Handle form submission
@@ -41,18 +49,23 @@ $message = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $child_name = trim($_POST['child_name']);
     $parent_id = (int)$_POST['parent_id'];
+    $selected_teacher_id = (int)$_POST['teacher_id'];
+    $section = trim($_POST['section']);
+    $school_year = trim($_POST['school_year']);
+    $age = (int)$_POST['age'];
+    $gender = $_POST['gender'];
     $domain = trim($_POST['domain']);
     $percentage = (int)$_POST['percentage'];
     $checklist = trim($_POST['checklist']);
     $report_text = trim($_POST['report_text']);
 
-    if (empty($child_name) || empty($domain) || $percentage < 0 || $percentage > 100) {
+    if (empty($child_name) || empty($domain) || $percentage < 0 || $percentage > 100 || empty($section) || empty($school_year) || $age <= 0 || empty($gender)) {
         $message = 'Please fill all required fields correctly.';
     } else {
-        // Insert child
-        $child_query = "INSERT INTO children (name, parent_id) VALUES (?, ?)";
+        // Insert child with selected teacher
+        $child_query = "INSERT INTO children (name, parent_id, teacher_id, age, gender, section, school_year) VALUES (?, ?, ?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($child_query);
-        $stmt->bind_param("si", $child_name, $parent_id);
+        $stmt->bind_param("siiisss", $child_name, $parent_id, $selected_teacher_id, $age, $gender, $section, $school_year);
         $stmt->execute();
         $child_id = $conn->insert_id;
 
@@ -66,7 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (!empty($report_text)) {
             $report_query = "INSERT INTO reports (child_id, teacher_id, report_text) VALUES (?, ?, ?)";
             $stmt = $conn->prepare($report_query);
-            $stmt->bind_param("iis", $child_id, $teacher_id, $report_text);
+            $stmt->bind_param("iis", $child_id, $selected_teacher_id, $report_text);
             $stmt->execute();
         }
 
@@ -133,12 +146,38 @@ $conn->close();
                     <label>Child's Name:</label>
                     <input type="text" name="child_name" required>
                 </div>
+                <div style="display: flex; flex-direction:row; gap: 10px;">
+                    <div class="form-group" style="flex: 1">
+                        <label>Age:</label>
+                        <input type="number" name="age" min="1" required>
+                    </div>
+                    <div class="form-group" style="flex: 1">
+                        <label>Gender:</label>
+                        <select name="gender" required>
+                            <option value="">Select Gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                        </select>
+                    </div>
+                </div>
+                <div style="display: flex; flex-direction:row; gap: 10px;">
+                    <div class="form-group" style="flex: 1">
+                        <label>Section:</label>
+                        <input type="text" name="section" required>
+                    </div>
+                    <div class="form-group" style="flex: 1">
+                        <label>School Year:</label>
+                        <input type="text" name="school_year" placeholder="e.g., 2025-2026" required>
+                    </div>
+                </div>
                 <div class="form-group">
                     <label>Select Parent:</label>
                     <select name="parent_id" required>
                         <option value="">Choose Parent</option>
                         <?php foreach ($parents as $parent): ?>
-                            <option value="<?php echo $parent['id']; ?>"><?php echo htmlspecialchars($parent['username']); ?></option>
+                            <option value="<?php echo $parent['id']; ?>">
+                                <?php echo htmlspecialchars($parent['first_name'] . ' ' . $parent['last_name']); ?>
+                            </option>
                         <?php endforeach; ?>
                     </select>
                 </div>

@@ -30,14 +30,53 @@ if (!$user || $user['role'] !== 'teacher') {
 
 $teacher_id = $user['id'];
 
-// Fetch students assigned to this teacher
-$query = "SELECT c.id, c.name AS child_name, c.age, 
-                 CONCAT(u.first_name, ' ', u.last_name) AS parent_name
-          FROM children c
-          LEFT JOIN users u ON c.parent_id = u.id AND u.role = 'parent'
-          WHERE c.teacher_id = ?";
+// --- NEW: Fetch distinct school years for the dropdown ---
+$year_query = "SELECT DISTINCT school_year FROM children WHERE teacher_id = ? ORDER BY school_year DESC";
+$stmt_year = $conn->prepare($year_query);
+$stmt_year->bind_param("i", $teacher_id);
+$stmt_year->execute();
+$year_result = $stmt_year->get_result();
+$school_years = [];
+while ($row = $year_result->fetch_assoc()) {
+    // Only include non-NULL and non-empty years
+    if (!empty($row['school_year'])) {
+        $school_years[] = $row['school_year'];
+    }
+}
+$stmt_year->close();
+
+
+// --- NEW: Get selected school year from GET parameter ---
+$selected_year = isset($_GET['school_year']) && in_array($_GET['school_year'], $school_years) ? $_GET['school_year'] : (empty($school_years) ? null : $school_years[0]);
+
+
+// --- MODIFIED: Fetch students assigned to this teacher, filtered by school year ---
+$query = "SELECT c.id, c.name AS child_name, c.age, c.section, c.school_year, 
+              CONCAT(u.first_name, ' ', u.last_name) AS parent_name
+           FROM children c
+           LEFT JOIN users u ON c.parent_id = u.id AND u.role = 'parent'
+           WHERE c.teacher_id = ?";
+
+$params = [$teacher_id];
+$types = "i";
+
+if ($selected_year) {
+    // Add school_year filter to the query
+    $query .= " AND c.school_year = ?";
+    $params[] = $selected_year;
+    $types .= "s"; // Assuming school_year is a string/varchar
+}
+
+$query .= " ORDER BY c.name ASC"; // Optional: sort by name
+
 $stmt = $conn->prepare($query);
-$stmt->bind_param("i", $teacher_id);
+if ($selected_year) {
+    // Dynamically bind parameters (more complex, but needed for variable argument count)
+    $stmt->bind_param($types, ...$params);
+} else {
+    $stmt->bind_param($types, $teacher_id);
+}
+
 $stmt->execute();
 $result = $stmt->get_result();
 
@@ -58,6 +97,7 @@ $conn->close();
     <link rel="stylesheet" href="css/style1.css">
     <link rel="stylesheet" href="css2/dashboard.css">
     <style>
+        /* ... existing styles ... */
         body {
             background-color: #f4f6f9;
             font-family: 'Poppins', sans-serif;
@@ -146,6 +186,27 @@ $conn->close();
             width: 50px;
             cursor: pointer;
         }
+
+        /* --- NEW: Style for filter/dropdown container --- */
+        .filter-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .filter-container label {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .filter-container select {
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
     </style>
 </head>
 
@@ -174,11 +235,25 @@ $conn->close();
     <div class="Home_container">
         <h2>Class Management</h2>
 
-        <a href="enroll_child.php" class="add-btn">+ Add New Student</a>
-
+        <div class="filter-container">
+            <label for="school_year_filter">School Year:</label>
+            <select id="school_year_filter" onchange="filterStudents(this.value)">
+                <?php if (!empty($school_years)): ?>
+                    <?php foreach ($school_years as $year): ?>
+                        <option value="<?php echo htmlspecialchars($year); ?>"
+                            <?php echo ($year == $selected_year) ? 'selected' : ''; ?>>
+                            <?php echo htmlspecialchars($year); ?>
+                        </option>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <option value="" disabled>No Years Found</option>
+                <?php endif; ?>
+            </select>
+            <a href="enroll_child.php" class="add-btn" style="margin-left: auto;">+ Add New Student</a>
+        </div>
         <div class="table-container">
             <?php if (empty($students)): ?>
-                <p class="no-data">No students enrolled yet.</p>
+                <p class="no-data">No students enrolled for the selected school year (<?php echo htmlspecialchars($selected_year); ?>).</p>
             <?php else: ?>
                 <table>
                     <thead>
@@ -186,6 +261,7 @@ $conn->close();
                             <th>Student Name</th>
                             <th>Age</th>
                             <th>Parent</th>
+                            <th>Section</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -195,6 +271,7 @@ $conn->close();
                                 <td><?php echo htmlspecialchars($student['child_name']); ?></td>
                                 <td><?php echo htmlspecialchars($student['age']); ?></td>
                                 <td><?php echo htmlspecialchars($student['parent_name'] ?? 'N/A'); ?></td>
+                                <td><?php echo htmlspecialchars($student['section'] ?? 'N/A'); ?></td>
                                 <td class="actions">
                                     <button onclick="window.location.href='teacher_progress.php?child_id=<?php echo $student['id']; ?>'">View Progress</button>
                                     <button class="remove" onclick="confirmRemove(<?php echo $student['id']; ?>)">Remove</button>
@@ -220,6 +297,12 @@ $conn->close();
             if (confirm("Are you sure you want to remove this student from your class?")) {
                 window.location.href = "remove_student.php?id=" + childId;
             }
+        }
+
+        // --- NEW: JavaScript function to filter students by school year ---
+        function filterStudents(selectedYear) {
+            // Reloads the page with the selected school year as a URL parameter
+            window.location.href = `class_management.php?school_year=${selectedYear}`;
         }
     </script>
 
