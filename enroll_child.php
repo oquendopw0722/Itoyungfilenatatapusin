@@ -167,7 +167,7 @@ $conn->close();
                     </div>
                     <div class="form-group" style="flex: 1">
                         <label>School Year:</label>
-                        <input type="text" name="school_year" placeholder="e.g., 2025-2026" required>
+                        <input type="text" name="school_year" placeholder="e.g., 2026" required>
                     </div>
                 </div>
                 <div class="form-group">
