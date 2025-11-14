@@ -103,13 +103,19 @@ $conn->close();
             font-family: 'Poppins', sans-serif;
         }
 
+        .sidebar {
+            top: 120px !important;
+            height: calc(100vh - 120px) !important;
+            overflow-y: auto !important;
+            overflow-x: hidden !important;
+        }
+
         .Home_container {
             margin-left: 250px;
             padding: 2rem;
         }
 
         h2 {
-            color: #333;
             margin-bottom: 1rem;
         }
 

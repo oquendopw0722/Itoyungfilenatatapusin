@@ -154,7 +154,7 @@ $conn->close();
                     <div class="form-group" style="flex: 1">
                         <label>Gender:</label>
                         <select name="gender" required>
-                            <option value="">Select Gender</option>
+                            <option value="" selected disabled>Select Gender</option>
                             <option value="Male">Male</option>
                             <option value="Female">Female</option>
                         </select>
@@ -173,7 +173,7 @@ $conn->close();
                 <div class="form-group">
                     <label>Select Parent:</label>
                     <select name="parent_id" required>
-                        <option value="">Choose Parent</option>
+                        <option value="" selected disabled>Choose Parent</option>
                         <?php foreach ($parents as $parent): ?>
                             <option value="<?php echo $parent['id']; ?>">
                                 <?php echo htmlspecialchars($parent['first_name'] . ' ' . $parent['last_name']); ?>
@@ -184,7 +184,7 @@ $conn->close();
                 <div class="form-group">
                     <label>Select Teacher:</label>
                     <select name="teacher_id" required>
-                        <option value="">Choose Teacher</option>
+                        <option value="" selected disabled>Choose Teacher</option>
                         <?php foreach ($teachers as $teacher): ?>
                             <option value="<?php echo $teacher['id']; ?>"><?php echo htmlspecialchars($teacher['username']); ?></option>
                         <?php endforeach; ?>
@@ -192,7 +192,16 @@ $conn->close();
                 </div>
                 <div class="form-group">
                     <label>Initial Domain (e.g., Gross Motor):</label>
-                    <input type="text" name="domain" required>
+                    <select name="gender" required>
+                        <option value="" selected disabled>Select Domain</option>
+                        <option value="Gross Motor">Gross Motor</option>
+                        <option value="Fine Motor">Fine Motor</option>
+                        <option value="Self Help">Self Help</option>
+                        <option value="Receptive Language">Receptive Language</option>
+                        <option value="Expressive Language">Expressive Language</option>
+                        <option value="Cognitive">Cognitive</option>
+                        <option value="Social-Emotional">Social-Emotional</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label>Initial Progress Percentage (0-100):</label>
