@@ -31,7 +31,7 @@ if ($year < 2024 || $year > 2040) {
     $month = date('n');
 }
 
-// Handle actions
+// Handle actions (Keep existing PHP logic)
 $message = '';
 $edit_event = null;
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && in_array($user_role, ['teacher', 'admin'])) {
@@ -98,6 +98,9 @@ $events = [];
 while ($row = $events_result->fetch_assoc()) {
     $events[$row['event_date']][] = $row;
 }
+
+// Encode events array as JSON for JavaScript usage
+$events_json = json_encode($events);
 
 $conn->close();
 
@@ -262,7 +265,7 @@ if ($next_month > 12) {
         }
 
         /* ---------------------------------------------------- */
-        /* 3. Event Form Styling (Add/Edit) */
+        /* 3. Event Form Styling (Add/Edit) - Keep existing */
         /* ---------------------------------------------------- */
         .event-form {
             background: white;
@@ -320,7 +323,7 @@ if ($next_month > 12) {
 
 
         /* ---------------------------------------------------- */
-        /* 4. Event Details List Styling */
+        /* 4. Event Details List Styling - Keep existing */
         /* ---------------------------------------------------- */
 
         .event-details-list {
@@ -374,8 +377,103 @@ if ($next_month > 12) {
         .event-actions button:hover {
             background-color: #ddd;
         }
+
+        /* ---------------------------------------------------- */
+        /* 5. Modal Styling (NEW) */
+        /* ---------------------------------------------------- */
+        .modal {
+            display: none;
+            /* Hidden by default */
+            position: fixed;
+            /* Stay in place */
+            z-index: 100;
+            /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            /* Enable scroll if needed */
+            background-color: rgb(0, 0, 0);
+            /* Fallback color */
+            background-color: rgba(0, 0, 0, 0.4);
+            /* Black w/ opacity */
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            /* 15% from the top and centered */
+            padding: 30px;
+            border: 1px solid #888;
+            width: 80%;
+            /* Could be more or less, depending on screen size */
+            max-width: 500px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        .modal-content h3 {
+            color: #343bc9;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eee;
+        }
+
+        .modal-content p {
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+
+        .modal-content p strong {
+            color: #555;
+            display: inline-block;
+            width: 100px;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            position: absolute;
+            top: 10px;
+            right: 20px;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* Styling for the list of events inside the modal */
+        #event-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        #event-list li {
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            border: 1px solid #eee;
+        }
+
+        #event-list li strong {
+            color: #333;
+            font-size: 1.1rem;
+            display: block;
+            margin-bottom: 5px;
+        }
     </style>
     <script>
+        // Store PHP events in a JavaScript variable
+        const allEvents = <?php echo $events_json; ?>;
+
         function confirmDelete() {
             return confirm("Are you sure you want to delete this event?");
         }
@@ -386,11 +484,68 @@ if ($next_month > 12) {
                 window.location.href = "logout.php";
             }
         }
+
+        /**
+         * Opens the modal and displays the events for the clicked date.
+         * @param {string} date - The date in 'YYYY-MM-DD' format.
+         */
+        function showEventDetails(date) {
+            const modal = document.getElementById('eventModal');
+            const eventList = document.getElementById('event-list');
+            const modalDate = document.getElementById('modal-date');
+            
+            // Format date for display
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            const dateObj = new Date(date + 'T00:00:00'); // Add time to fix timezone issue
+            modalDate.textContent = dateObj.toLocaleDateString('en-US', options);
+
+            eventList.innerHTML = ''; // Clear previous events
+
+            const eventsOnDate = allEvents[date];
+
+            if (eventsOnDate && eventsOnDate.length > 0) {
+                eventsOnDate.forEach(event => {
+                    const listItem = document.createElement('li');
+                    
+                    // Create Title element
+                    const title = document.createElement('strong');
+                    title.textContent = event.title;
+
+                    // Create Description element
+                    const description = document.createElement('p');
+                    description.innerHTML = event.description;
+
+                    // Append to list item
+                    listItem.appendChild(title);
+                    listItem.appendChild(description);
+                    eventList.appendChild(listItem);
+                });
+            } else {
+                const listItem = document.createElement('li');
+                listItem.textContent = 'No events scheduled for this date.';
+                eventList.appendChild(listItem);
+            }
+
+            modal.style.display = 'block';
+        }
+
+        // When the user clicks on (x), close the modal
+        function closeModal() {
+            const modal = document.getElementById('eventModal');
+            modal.style.display = 'none';
+        }
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+            const modal = document.getElementById('eventModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
     </script>
 </head>
 
 <body>
-    <!-- Topbar and Sidebar (unchanged) -->
     <div class="Topbar">
         <img class="Antipolo" src="pictures/ANTIPOLO.png">
         <h1 class="TopbarTitle1">GOLD: &nbsp; </h1>
@@ -418,7 +573,6 @@ if ($next_month > 12) {
                 <a href="?month=<?php echo $next_month; ?>&year=<?php echo $next_year; ?>">Next</a>
             </div>
 
-            <!-- Calendar Table (unchanged) -->
             <table class="calendar">
                 <thead>
                     <tr>
@@ -445,7 +599,11 @@ if ($next_month > 12) {
                                 $date = sprintf('%04d-%02d-%02d', $year, $month, $day);
                                 $has_event = isset($events[$date]);
                                 $class = $has_event ? 'event' : '';
-                                echo "<td class=\"$class\">$day";
+                                
+                                // **MODIFICATION HERE:** Add onclick event to clickable cells
+                                $onclick = $has_event ? "onclick=\"showEventDetails('$date')\"" : '';
+                                
+                                echo "<td class=\"$class\" $onclick>$day";
                                 if ($has_event) {
                                     echo '<br><small>' . count($events[$date]) . ' event(s)</small>';
                                 }
@@ -462,7 +620,6 @@ if ($next_month > 12) {
 
             <br><br><br>
 
-            <!-- Add/Edit Event Form -->
             <?php if (in_array($user_role, ['teacher', 'admin'])): ?>
                 <div class="event-form">
                     <h3><?php echo $edit_event ? 'Edit Event' : 'Add Event'; ?></h3>
@@ -481,40 +638,20 @@ if ($next_month > 12) {
 
             <br><br><br>
 
-            <!-- Event Details with Edit/Delete -->
             <?php if (!empty($events)): ?>
-                <h3>Events</h3>
-                <br>
-                <?php foreach ($events as $date => $event_list): ?>
-                    <h4><?php echo date('M d, Y', strtotime($date)); ?></h4>
-                    <ul>
-                        <?php foreach ($event_list as $event): ?>
-                            <li>
-                                <strong><?php echo htmlspecialchars($event['title']); ?></strong>: <?php echo htmlspecialchars($event['description']); ?>
-                                <?php if (in_array($user_role, ['teacher', 'admin']) && ($event['created_by'] == $user_id || $user_role == 'admin')): ?>
-                                    <div class="event-actions">
-                                        <form method="POST" style="display: inline;">
-                                            <input type="hidden" name="event_id" value="<?php echo $event['id']; ?>">
-                                            <button type="submit" name="load_edit">Edit</button>
-                                        </form>
-                                        <form method="POST" style="display: inline;" onsubmit="return confirmDelete()">
-                                            <input type="hidden" name="event_id" value="<?php echo $event['id']; ?>">
-                                            <button type="submit" name="delete_event">Delete</button>
-                                        </form>
-                                    </div>
-                                <?php endif; ?>
-                            </li><br>
-                        <?php endforeach; ?>
-                    </ul>
-                <?php endforeach; ?>
-            <?php endif; ?>
-
-
-
-
-        </div>
+                 <?php endif; ?>
+            
+            </div>
     </div>
 
+    <div id="eventModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h3>Events for <span id="modal-date"></span></h3>
+            <ul id="event-list">
+                </ul>
+        </div>
+    </div>
     <img src="pictures/LOicon.png" alt="Logout" class="logout" onclick="confirmLogout()">
 </body>
 

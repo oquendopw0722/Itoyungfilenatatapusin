@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 12, 2025 at 07:05 AM
+-- Generation Time: Nov 23, 2025 at 05:54 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -65,18 +65,20 @@ CREATE TABLE `children` (
   `age` int(11) DEFAULT NULL,
   `gender` enum('Male','Female','Other') DEFAULT NULL,
   `lrn` varchar(20) DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT current_timestamp()
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  `section` varchar(50) NOT NULL,
+  `school_year` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `children`
 --
 
-INSERT INTO `children` (`id`, `parent_id`, `teacher_id`, `name`, `age`, `gender`, `lrn`, `created_at`) VALUES
-(1, 28, 21, 'Charlson', NULL, NULL, NULL, '2025-10-29 06:01:21'),
-(2, 27, 21, 'Maxson', NULL, NULL, NULL, '2025-10-29 06:02:31'),
-(3, 20, 23, 'George W. Bush', NULL, NULL, NULL, '2025-11-12 02:54:42'),
-(4, 20, 23, 'Albert W. Bush', NULL, NULL, NULL, '2025-11-12 02:56:18');
+INSERT INTO `children` (`id`, `parent_id`, `teacher_id`, `name`, `age`, `gender`, `lrn`, `created_at`, `section`, `school_year`) VALUES
+(1, 28, 21, 'Charlson', 6, 'Male', NULL, '2025-10-29 06:01:21', 'Sampaguita', '2025'),
+(2, 27, 21, 'Maxson', 6, 'Male', NULL, '2025-10-29 06:02:31', 'Rosas', '2026'),
+(3, 20, 23, 'George W. Bush', 5, 'Male', NULL, '2025-11-12 02:54:42', 'Gumamela', '2025'),
+(4, 20, 23, 'Albert W. Bush', 7, 'Male', NULL, '2025-11-12 02:56:18', 'Sunflower', '2026');
 
 --
 -- Triggers `children`
@@ -235,6 +237,29 @@ INSERT INTO `reports` (`id`, `child_id`, `teacher_id`, `report_text`, `created_a
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `student_status`
+--
+
+CREATE TABLE `student_status` (
+  `id` int(11) NOT NULL,
+  `children_id` int(11) NOT NULL,
+  `status` enum('draft','enrolled','graduated','withdrawn','suspended') NOT NULL,
+  `last_updated` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `student_status`
+--
+
+INSERT INTO `student_status` (`id`, `children_id`, `status`, `last_updated`) VALUES
+(1, 1, 'enrolled', '2025-11-23 04:52:57'),
+(2, 2, 'draft', '2025-11-23 04:52:57'),
+(3, 3, 'enrolled', '2025-11-23 04:52:57'),
+(4, 4, 'graduated', '2025-11-23 04:52:57');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `test1`
 --
 
@@ -363,6 +388,13 @@ ALTER TABLE `reports`
   ADD KEY `teacher_id` (`teacher_id`);
 
 --
+-- Indexes for table `student_status`
+--
+ALTER TABLE `student_status`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `children_id` (`children_id`);
+
+--
 -- Indexes for table `test1`
 --
 ALTER TABLE `test1`
@@ -422,6 +454,12 @@ ALTER TABLE `reports`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
+-- AUTO_INCREMENT for table `student_status`
+--
+ALTER TABLE `student_status`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
 -- AUTO_INCREMENT for table `test1`
 --
 ALTER TABLE `test1`
@@ -448,6 +486,7 @@ ALTER TABLE `announcements`
 --
 ALTER TABLE `children`
   ADD CONSTRAINT `children_ibfk_1` FOREIGN KEY (`parent_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_teacher` FOREIGN KEY (`teacher_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_teacher_user` FOREIGN KEY (`teacher_id`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
@@ -480,6 +519,12 @@ ALTER TABLE `learning_materials`
 ALTER TABLE `reports`
   ADD CONSTRAINT `reports_ibfk_1` FOREIGN KEY (`child_id`) REFERENCES `children` (`id`),
   ADD CONSTRAINT `reports_ibfk_2` FOREIGN KEY (`teacher_id`) REFERENCES `users` (`id`);
+
+--
+-- Constraints for table `student_status`
+--
+ALTER TABLE `student_status`
+  ADD CONSTRAINT `student_status_ibfk_1` FOREIGN KEY (`children_id`) REFERENCES `children` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `test1`

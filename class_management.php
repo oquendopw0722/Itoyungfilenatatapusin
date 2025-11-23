@@ -30,7 +30,7 @@ if (!$user || $user['role'] !== 'teacher') {
 
 $teacher_id = $user['id'];
 
-// --- NEW: Fetch distinct school years for the dropdown ---
+// Fetch distinct school years for the dropdown
 $year_query = "SELECT DISTINCT school_year FROM children WHERE teacher_id = ? ORDER BY school_year DESC";
 $stmt_year = $conn->prepare($year_query);
 $stmt_year->bind_param("i", $teacher_id);
@@ -46,16 +46,31 @@ while ($row = $year_result->fetch_assoc()) {
 $stmt_year->close();
 
 
-// --- NEW: Get selected school year from GET parameter ---
+// Get selected school year from GET parameter
 $selected_year = isset($_GET['school_year']) && in_array($_GET['school_year'], $school_years) ? $_GET['school_year'] : (empty($school_years) ? null : $school_years[0]);
 
 
-// --- MODIFIED: Fetch students assigned to this teacher, filtered by school year ---
-$query = "SELECT c.id, c.name AS child_name, c.age, c.section, c.school_year, 
-              CONCAT(u.first_name, ' ', u.last_name) AS parent_name
-           FROM children c
-           LEFT JOIN users u ON c.parent_id = u.id AND u.role = 'parent'
-           WHERE c.teacher_id = ?";
+// --- MODIFIED: Fetch students and their LATEST status ---
+$query = "
+    SELECT 
+        c.id, c.name AS child_name, c.age, c.section, c.school_year, 
+        CONCAT(u.first_name, ' ', u.last_name) AS parent_name,
+        -- Use COALESCE to default the status to 'Draft' if no record exists in student_status
+        COALESCE(ss_latest.status, 'Draft') AS student_status 
+    FROM children c
+    LEFT JOIN users u ON c.parent_id = u.id AND u.role = 'parent'
+
+    -- Join 1: Find the max (latest) status record ID for each child
+    LEFT JOIN (
+        SELECT children_id, MAX(id) AS latest_id
+        FROM student_status
+        GROUP BY children_id
+    ) ss_max_id ON c.id = ss_max_id.children_id
+    
+    -- Join 2: Retrieve the actual status details using the latest ID found
+    LEFT JOIN student_status ss_latest ON ss_max_id.latest_id = ss_latest.id
+
+    WHERE c.teacher_id = ?";
 
 $params = [$teacher_id];
 $types = "i";
@@ -70,12 +85,8 @@ if ($selected_year) {
 $query .= " ORDER BY c.name ASC"; // Optional: sort by name
 
 $stmt = $conn->prepare($query);
-if ($selected_year) {
-    // Dynamically bind parameters (more complex, but needed for variable argument count)
-    $stmt->bind_param($types, ...$params);
-} else {
-    $stmt->bind_param($types, $teacher_id);
-}
+// Dynamically bind parameters (required for variable argument count)
+$stmt->bind_param($types, ...$params);
 
 $stmt->execute();
 $result = $stmt->get_result();
@@ -163,6 +174,23 @@ $conn->close();
             background: #e74c3c;
         }
 
+        /* Status pill styling */
+        .status-pill {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: white;
+            text-transform: capitalize;
+        }
+
+        .status-enrolled { background-color: #4CAF50; } /* Green */
+        .status-graduated { background-color: #3498db; } /* Blue */
+        .status-withdrawn { background-color: #e67e22; } /* Orange */
+        .status-suspended { background-color: #e74c3c; } /* Red */
+        .status-draft { background-color: #95a5a6; } /* Gray */
+
         .add-btn {
             width: fit-content;
             background: #4CAF50;
@@ -193,7 +221,7 @@ $conn->close();
             cursor: pointer;
         }
 
-        /* --- NEW: Style for filter/dropdown container --- */
+        /* Style for filter/dropdown container */
         .filter-container {
             display: flex;
             align-items: center;
@@ -268,6 +296,8 @@ $conn->close();
                             <th>Age</th>
                             <th>Parent</th>
                             <th>Section</th>
+                            <!-- NEW COLUMN ADDED HERE -->
+                            <th>Status</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -278,6 +308,17 @@ $conn->close();
                                 <td><?php echo htmlspecialchars($student['age']); ?></td>
                                 <td><?php echo htmlspecialchars($student['parent_name'] ?? 'N/A'); ?></td>
                                 <td><?php echo htmlspecialchars($student['section'] ?? 'N/A'); ?></td>
+                                <!-- NEW STATUS DISPLAY ADDED HERE -->
+                                <td>
+                                    <?php 
+                                        $status_text = htmlspecialchars($student['student_status']);
+                                        // Create a class name for dynamic styling (e.g., status-enrolled)
+                                        $status_class = 'status-' . strtolower($status_text);
+                                    ?>
+                                    <span class="status-pill <?php echo $status_class; ?>">
+                                        <?php echo $status_text; ?>
+                                    </span>
+                                </td>
                                 <td class="actions">
                                     <button onclick="window.location.href='teacher_progress.php?child_id=<?php echo $student['id']; ?>'">View Progress</button>
                                     <button class="remove" onclick="confirmRemove(<?php echo $student['id']; ?>)">Remove</button>
@@ -294,18 +335,20 @@ $conn->close();
 
     <script>
         function confirmLogout() {
+            // Using a custom modal is recommended, but using confirm() for a quick fix here
             if (confirm("Are you sure you want to log out?")) {
                 window.location.href = "logout.php";
             }
         }
 
         function confirmRemove(childId) {
+            // Using a custom modal is recommended, but using confirm() for a quick fix here
             if (confirm("Are you sure you want to remove this student from your class?")) {
                 window.location.href = "remove_student.php?id=" + childId;
             }
         }
 
-        // --- NEW: JavaScript function to filter students by school year ---
+        // JavaScript function to filter students by school year
         function filterStudents(selectedYear) {
             // Reloads the page with the selected school year as a URL parameter
             window.location.href = `class_management.php?school_year=${selectedYear}`;
